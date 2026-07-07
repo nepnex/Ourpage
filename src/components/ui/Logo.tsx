@@ -43,8 +43,8 @@ export function Logo({
             textClassName,
           )}
         >
-          <span>Nep<span className={isLight ? 'text-primary-300' : 'text-primary-500'}>Nex</span></span>
-          <span className="font-medium opacity-80 text-[0.65em] tracking-wider uppercase hidden sm:inline-block">Technologies</span>
+          <span>Nep <span className={isLight ? 'text-primary-300' : 'text-primary-500'}>Nex</span></span>
+          <span className="font-medium opacity-80 text-[0.65em] tracking-wider uppercase inline-block">Technologies</span>
         </span>
       )}
     </>

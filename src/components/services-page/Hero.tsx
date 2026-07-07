@@ -31,7 +31,7 @@ export function Hero() {
 
   useEffect(() => {
     const el = heroRef.current;
-    if (!el) return;
+    if (!el || window.innerWidth < 768) return;
     el.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => el.removeEventListener('mousemove', handleMouseMove);
   }, [handleMouseMove]);
@@ -56,7 +56,7 @@ export function Hero() {
       />
 
       {/* Mouse spotlight */}
-      {!reducedMotion && (
+      {!reducedMotion && window.innerWidth >= 768 && (
         <div
           className="absolute inset-0 z-0 pointer-events-none transition-all duration-300"
           style={{
