@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Section, SectionHeading } from '@/components/ui';
 import { useReducedMotion } from '@/hooks';
 
@@ -11,6 +11,7 @@ const testimonials = [
     role: 'CEO',
     company: 'Tech Solutions Nepal',
     avatar: 'RS',
+    avatarColor: 'from-primary-500 to-cyan-500',
     rating: 5,
   },
   {
@@ -19,6 +20,7 @@ const testimonials = [
     role: 'Marketing Director',
     company: 'Himalayan Ventures',
     avatar: 'PM',
+    avatarColor: 'from-indigo-500 to-violet-500',
     rating: 5,
   },
   {
@@ -27,6 +29,7 @@ const testimonials = [
     role: 'Founder',
     company: 'FoodExpress Nepal',
     avatar: 'AT',
+    avatarColor: 'from-emerald-500 to-cyan-500',
     rating: 5,
   },
   {
@@ -35,16 +38,50 @@ const testimonials = [
     role: 'Operations Manager',
     company: 'Global Services Ltd',
     avatar: 'SK',
+    avatarColor: 'from-violet-500 to-primary-500',
     rating: 5,
   },
 ];
 
 export function Testimonials() {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
   const reducedMotion = useReducedMotion();
 
-  const next = () => setCurrent((prev) => (prev + 1) % testimonials.length);
-  const prev = () => setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  const next = useCallback(() => {
+    setDirection(1);
+    setCurrent((prev) => (prev + 1) % testimonials.length);
+  }, []);
+
+  const prev = useCallback(() => {
+    setDirection(-1);
+    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  }, []);
+
+  // Auto-advance
+  useEffect(() => {
+    if (reducedMotion) return;
+    const timer = setInterval(next, 5500);
+    return () => clearInterval(timer);
+  }, [next, reducedMotion]);
+
+  const variants = {
+    enter: (dir: number) => ({
+      opacity: 0,
+      x: dir > 0 ? 60 : -60,
+      scale: 0.97,
+    }),
+    center: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+    },
+    exit: (dir: number) => ({
+      opacity: 0,
+      x: dir > 0 ? -60 : 60,
+      scale: 0.97,
+    }),
+  };
 
   return (
     <Section background="light">
@@ -54,100 +91,176 @@ export function Testimonials() {
         description="Hear from businesses that have transformed their digital presence with NepNex Technologies."
       />
 
-      <div className="relative max-w-4xl mx-auto px-1">
-        {/* Quote icon */}
-        <div className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center">
-          <Quote className="w-6 h-6 sm:w-8 sm:h-8" />
+      <div className="relative max-w-4xl mx-auto">
+        {/* ─── Large decorative quote mark ─── */}
+        <div
+          className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full text-[6rem] leading-none font-serif font-bold pointer-events-none select-none z-0"
+          style={{ color: 'rgba(18,150,219,0.12)' }}
+          aria-hidden="true"
+        >
+          "
         </div>
 
-        {/* Testimonial card */}
-        <div className="relative overflow-hidden rounded-2xl bg-white shadow-xl p-6 sm:p-8 md:p-12 pt-12 sm:pt-16">
-          <AnimatePresence mode="wait">
+        {/* ─── Glass card ─── */}
+        <div
+          className="relative rounded-3xl overflow-hidden px-6 sm:px-10 md:px-16 py-10 sm:py-12"
+          style={{
+            background: 'rgba(255,255,255,0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.7)',
+            boxShadow: '0 8px 40px rgba(18,150,219,0.08), 0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
+          }}
+        >
+          {/* Subtle gradient background */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(18,150,219,0.05) 0%, transparent 70%)',
+            }}
+          />
+
+          {/* ─── Slide content ─── */}
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={current}
-              initial={reducedMotion ? { opacity: 1 } : { opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reducedMotion ? { opacity: 1 } : { opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-              className="text-center"
+              custom={direction}
+              variants={reducedMotion ? {} : variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.45, ease: [0.21, 1.02, 0.73, 1] }}
+              className="text-center relative z-10"
             >
-              {/* Rating */}
-              <div className="flex justify-center gap-1 mb-6">
+              {/* Star rating */}
+              <div className="flex justify-center gap-1.5 mb-6">
                 {[...Array(testimonials[current].rating)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-warning-400 fill-current" viewBox="0 0 20 20">
+                  <motion.svg
+                    key={i}
+                    initial={{ opacity: 0, scale: 0, rotate: -20 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    transition={{
+                      delay: i * 0.07,
+                      type: 'spring',
+                      damping: 10,
+                      stiffness: 200,
+                    }}
+                    className="w-5 h-5"
+                    viewBox="0 0 20 20"
+                    style={{ fill: '#F59E0B', filter: 'drop-shadow(0 1px 3px rgba(245,158,11,0.4))' }}
+                  >
                     <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                  </svg>
+                  </motion.svg>
                 ))}
               </div>
 
               {/* Quote */}
-              <blockquote className="text-base sm:text-lg md:text-xl lg:text-heading-lg text-secondary-900 mb-6 sm:mb-8 leading-relaxed px-0 sm:px-6">
-                "{testimonials[current].quote}"
+              <blockquote className="text-base sm:text-lg md:text-xl text-secondary-800 mb-8 leading-relaxed font-medium tracking-[-0.01em] px-0 sm:px-4">
+                &ldquo;{testimonials[current].quote}&rdquo;
               </blockquote>
 
               {/* Author */}
-              <div className="flex flex-col xs:flex-row items-center justify-center gap-3 sm:gap-4">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-primary-600 text-white flex items-center justify-center text-base sm:text-lg font-semibold shrink-0">
-                  {testimonials[current].avatar}
+              <div className="flex flex-col xs:flex-row items-center justify-center gap-4">
+                {/* Avatar with gradient ring */}
+                <div className="relative flex-shrink-0">
+                  <div
+                    className={`w-14 h-14 rounded-full bg-gradient-to-br ${testimonials[current].avatarColor} flex items-center justify-center text-white text-lg font-bold`}
+                    style={{ boxShadow: '0 2px 12px rgba(18,150,219,0.25)' }}
+                  >
+                    {testimonials[current].avatar}
+                  </div>
+                  {/* Online indicator */}
+                  <div
+                    className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-400 border-2 border-white"
+                    style={{ boxShadow: '0 0 6px rgba(16,185,129,0.5)' }}
+                  />
                 </div>
+
                 <div className="text-center xs:text-left">
-                  <div className="font-semibold text-secondary-900">{testimonials[current].author}</div>
+                  <div className="font-semibold text-secondary-900 text-base">{testimonials[current].author}</div>
                   <div className="text-sm text-secondary-500">
-                    {testimonials[current].role}, {testimonials[current].company}
+                    {testimonials[current].role}
+                    <span className="mx-1.5 text-secondary-300">·</span>
+                    <span className="text-primary-600 font-medium">{testimonials[current].company}</span>
                   </div>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Desktop/tablet side navigation */}
+          {/* ─── Desktop side navigation ─── */}
           <button
             onClick={prev}
-            className="hidden sm:flex absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors items-center justify-center"
+            className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center text-secondary-400 hover:text-primary-600 transition-all duration-200 hover:scale-110"
+            style={{
+              background: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(18,150,219,0.12)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              backdropFilter: 'blur(8px)',
+            }}
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={next}
-            className="hidden sm:flex absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-9 h-9 md:w-10 md:h-10 rounded-full bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors items-center justify-center"
+            className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center text-secondary-400 hover:text-primary-600 transition-all duration-200 hover:scale-110"
+            style={{
+              background: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(18,150,219,0.12)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              backdropFilter: 'blur(8px)',
+            }}
             aria-label="Next testimonial"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
-
-          {/* Mobile bottom navigation */}
-          <div className="flex sm:hidden justify-center gap-3 mt-4 pt-4 border-t border-secondary-100">
-            <button
-              onClick={prev}
-              className="w-10 h-10 rounded-full bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors flex items-center justify-center"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={next}
-              className="w-10 h-10 rounded-full bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors flex items-center justify-center"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-6">
+        {/* ─── Mobile navigation ─── */}
+        <div className="flex sm:hidden justify-center gap-3 mt-5">
+          <button
+            onClick={prev}
+            className="w-10 h-10 rounded-full bg-white border border-secondary-200 text-secondary-500 hover:text-primary-600 hover:border-primary-200 flex items-center justify-center transition-all duration-200 shadow-sm"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={next}
+            className="w-10 h-10 rounded-full bg-white border border-secondary-200 text-secondary-500 hover:text-primary-600 hover:border-primary-200 flex items-center justify-center transition-all duration-200 shadow-sm"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* ─── Dot indicators ─── */}
+        <div className="flex justify-center gap-2 mt-5">
           {testimonials.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrent(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                index === current
-                  ? 'bg-primary-600 w-8'
-                  : 'bg-secondary-300 hover:bg-secondary-400'
-              }`}
+              onClick={() => {
+                setDirection(index > current ? 1 : -1);
+                setCurrent(index);
+              }}
+              className="relative h-2 rounded-full transition-all duration-400 overflow-hidden"
+              style={{
+                width: index === current ? '2rem' : '0.5rem',
+                background: index === current ? 'transparent' : 'rgba(18,150,219,0.25)',
+                transition: 'width 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.2s',
+              }}
               aria-label={`Go to testimonial ${index + 1}`}
-            />
+            >
+              {index === current && (
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: 'linear-gradient(90deg, #1296DB, #4F46E5)' }}
+                  layoutId="activeDot"
+                  transition={{ duration: 0.35, type: 'spring', damping: 20, stiffness: 300 }}
+                />
+              )}
+            </button>
           ))}
         </div>
       </div>

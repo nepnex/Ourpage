@@ -6,10 +6,10 @@ import { useInView, useReducedMotion } from '@/hooks';
 import { fadeInUpVariants, easeTransitions } from '@/utils/animations';
 
 const floatingOrbs = [
-  { size: 320, x: -10, y: -30, color: 'rgba(255,255,255,0.06)', delay: 0, duration: 14 },
-  { size: 240, x: 80, y: 60, color: 'rgba(79,70,229,0.15)', delay: 2, duration: 18 },
-  { size: 180, x: -5, y: 70, color: 'rgba(6,182,212,0.1)', delay: 4, duration: 12 },
-  { size: 140, x: 90, y: -5, color: 'rgba(255,255,255,0.04)', delay: 1, duration: 16 },
+  { size: 300, x: -5, y: -20, color: 'rgba(255,255,255,0.06)', delay: 0, duration: 15 },
+  { size: 220, x: 85, y: 55, color: 'rgba(79,70,229,0.15)', delay: 2, duration: 19 },
+  { size: 160, x: 10, y: 75, color: 'rgba(6,182,212,0.1)', delay: 4, duration: 13 },
+  { size: 150, x: 80, y: 5, color: 'rgba(255,255,255,0.05)', delay: 1, duration: 17 },
 ];
 
 export function CTA() {
@@ -17,44 +17,43 @@ export function CTA() {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
+    <section className="relative py-24 sm:py-32 overflow-hidden">
       <div ref={inViewRef}>
-
-        {/* ─── Animated gradient background ─── */}
+        {/* Animated gradient background */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 z-0 pointer-events-none"
           style={{
             background: 'linear-gradient(135deg, #0b5a85 0%, #0e78b0 25%, #1296DB 50%, #3730a3 75%, #4F46E5 100%)',
             backgroundSize: '300% 300%',
-            animation: reducedMotion ? 'none' : 'gradient-rotate 8s ease infinite',
+            animation: reducedMotion ? 'none' : 'gradient-rotate 10s ease infinite',
           }}
         />
 
-        {/* ─── Grid pattern overlay ─── */}
+        {/* Grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.07]"
+          className="absolute inset-0 opacity-[0.05] pointer-events-none z-0"
           style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
           }}
         />
 
-        {/* ─── Floating orbs ─── */}
+        {/* Floating orbs */}
         {!reducedMotion && floatingOrbs.map((orb, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full pointer-events-none"
+            className="absolute rounded-full pointer-events-none z-0"
             style={{
               width: orb.size,
               height: orb.size,
               left: `${orb.x}%`,
               top: `${orb.y}%`,
               background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
-              filter: 'blur(1px)',
+              filter: 'blur(2px)',
             }}
             animate={{
               y: [0, -30, 0],
-              x: [0, 15, 0],
+              x: [0, 20, 0],
               scale: [1, 1.05, 1],
             }}
             transition={{
@@ -66,42 +65,8 @@ export function CTA() {
           />
         ))}
 
-        {/* ─── Light sweep effect ─── */}
-        {!reducedMotion && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div
-              className="animate-sweep absolute top-0 bottom-0 w-1/3"
-              style={{
-                background: 'linear-gradient(105deg, transparent 10%, rgba(255,255,255,0.05) 50%, transparent 90%)',
-                transform: 'skewX(-20deg)',
-              }}
-            />
-          </div>
-        )}
-
-        {/* ─── Particle dots ─── */}
-        {!reducedMotion && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 rounded-full bg-white/20 animate-dot-blink"
-                style={{
-                  left: `${(i * 8.3) + Math.sin(i) * 4}%`,
-                  top: `${20 + (i * 6) % 60}%`,
-                  animationDelay: `${i * 0.3}s`,
-                  animationDuration: `${2 + (i % 3) * 0.7}s`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* ─── Content ─── */}
         <Container className="relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-
-            {/* Badge */}
+          <div className="max-w-4xl mx-auto text-center">
             <motion.div
               variants={fadeInUpVariants}
               initial="hidden"
@@ -113,63 +78,53 @@ export function CTA() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white/90"
                 style={{
                   background: 'rgba(255,255,255,0.1)',
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  backdropFilter: 'blur(12px)',
                 }}
               >
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                Start Your Journey Today
+                Let's Build Something Great
               </div>
             </motion.div>
 
-            {/* Heading */}
             <motion.h2
               variants={fadeInUpVariants}
               initial="hidden"
               animate={isInView ? 'visible' : 'hidden'}
               transition={{ ...easeTransitions.smooth, delay: 0.1 }}
-              className="heading-section text-white mb-5 sm:mb-6"
-              style={{ textShadow: '0 2px 20px rgba(0,0,0,0.15)' }}
+              className="heading-section text-white mb-6"
             >
-              Ready to Transform Your Digital Presence?
+              Ready to Transform Your Business?
             </motion.h2>
 
-            {/* Description */}
             <motion.p
               variants={fadeInUpVariants}
               initial="hidden"
               animate={isInView ? 'visible' : 'hidden'}
               transition={{ ...easeTransitions.smooth, delay: 0.2 }}
-              className="text-body-md sm:text-body-lg lg:text-body-xl mb-10 sm:mb-12 max-w-2xl mx-auto px-2 leading-relaxed"
-              style={{ color: 'rgba(255,255,255,0.8)' }}
+              className="text-body-lg sm:text-body-xl mb-12 max-w-2xl mx-auto text-white/80 leading-relaxed"
             >
-              Let's discuss how NepNex Technologies can help your business achieve its digital goals.
-              Book a free consultation and take the first step towards digital excellence.
+              Whether you're launching a startup, growing a local business, or expanding an established company, NepNex is here to help you build, grow, and succeed through innovative digital solutions.
             </motion.p>
 
-            {/* Buttons */}
             <motion.div
               variants={fadeInUpVariants}
               initial="hidden"
               animate={isInView ? 'visible' : 'hidden'}
               transition={{ ...easeTransitions.smooth, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center px-2"
+              className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              {/* Primary white button */}
               <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/book-consultation"
                   className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-white font-semibold text-primary-600 text-base transition-all duration-300 w-full sm:w-auto"
-                  style={{
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.1)',
-                  }}
+                  style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.1)' }}
                 >
                   Book Free Consultation
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </motion.div>
 
-              {/* Ghost / glass button */}
               <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/contact"
