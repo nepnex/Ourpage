@@ -9,4 +9,6 @@ export { SectionHeading } from './SectionHeading';
 export { Container } from './Container';
 export { Section } from './Section';
 export { Skeleton, SkeletonText, SkeletonCard } from './Skeleton';
+export { PageHero3D } from './PageHero3D';
+
 
