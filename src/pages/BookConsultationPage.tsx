@@ -18,6 +18,10 @@ import {
   FileText,
   DollarSign,
   CheckSquare,
+  Clock,
+  ShieldCheck,
+  Target,
+  Sparkles,
 } from 'lucide-react';
 import { Button, Input, Select, Textarea, Container, Section } from '@/components/ui';
 import { fadeInUpVariants, staggerContainerVariants, staggerItemVariants } from '@/utils/animations';
@@ -259,24 +263,59 @@ export function BookConsultationPage() {
         </Container>
       </section>
 
-      {/* ── Trust bar ─────────────────────────────────────────────────────── */}
-      <div className="bg-secondary-50 border-b border-secondary-100 py-5">
+      {/* ── Premium Value Cards Section ─────────────────────────────────────── */}
+      <div className="relative -mt-8 z-20">
         <Container>
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-10 text-sm text-secondary-500 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto px-4">
             {[
-              ['✅', 'Free & no obligation'],
-              ['⚡', '24-hour response'],
-              ['🎯', 'Tailored solutions'],
-              ['🔒', 'Your info stays private'],
-            ].map(([icon, text]) => (
-              <div key={text} className="flex items-center gap-2">
-                <span className="text-base">{icon}</span>
-                <span>{text}</span>
-              </div>
-            ))}
+              {
+                icon: Sparkles,
+                title: 'Free & Zero Obligation',
+                desc: 'No commitment required',
+                color: 'from-blue-500 to-cyan-500',
+              },
+              {
+                icon: Clock,
+                title: '24-Hour Response',
+                desc: 'Fast reply guaranteed',
+                color: 'from-purple-500 to-pink-500',
+              },
+              {
+                icon: Target,
+                title: 'Tailored Solutions',
+                desc: 'Custom plan for your needs',
+                color: 'from-indigo-500 to-purple-500',
+              },
+              {
+                icon: ShieldCheck,
+                title: '100% Confidential',
+                desc: 'Your data is safe with us',
+                color: 'from-emerald-500 to-teal-500',
+              },
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white/80 backdrop-blur-md rounded-2xl border border-secondary-200/60 p-5 shadow-lg hover:shadow-xl transition-all duration-200 group text-center md:text-left flex flex-col md:flex-row items-center md:items-start gap-4"
+                >
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-secondary-800 leading-snug">{item.title}</h4>
+                    <p className="text-xs text-secondary-500 mt-1">{item.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </Container>
       </div>
+
 
       {/* ── Form Section ──────────────────────────────────────────────────── */}
       <Section className="py-12 sm:py-16 lg:py-20">

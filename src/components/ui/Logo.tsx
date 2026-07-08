@@ -35,17 +35,26 @@ export function Logo({
         className={cn(sizes[size].img, 'object-contain shrink-0')}
       />
       {showText && (
-        <span
-          className={cn(
-            'font-bold flex items-baseline gap-1.5',
-            isLight ? 'text-white' : 'text-secondary-900',
-            sizes[size].text,
-            textClassName,
-          )}
-        >
-          <span>Nep <span className={isLight ? 'text-primary-300' : 'text-primary-500'}>Nex</span></span>
-          <span className="font-medium opacity-80 text-[0.65em] tracking-wider uppercase inline-block">Technologies</span>
-        </span>
+        <div className="flex flex-col justify-center leading-none text-left">
+          <span
+            className={cn(
+              'font-bold tracking-tight',
+              isLight ? 'text-white' : 'text-secondary-900',
+              sizes[size].text,
+              textClassName,
+            )}
+          >
+            Nep<span className={isLight ? 'text-primary-300' : 'text-primary-500'}>Nex</span>
+          </span>
+          <span
+            className={cn(
+              'font-semibold opacity-75 tracking-[0.2em] uppercase block mt-0.5 text-[0.55em] leading-none',
+              isLight ? 'text-white/80' : 'text-secondary-500'
+            )}
+          >
+            Technologies
+          </span>
+        </div>
       )}
     </>
   );
