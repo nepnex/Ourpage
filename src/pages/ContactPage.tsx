@@ -187,18 +187,43 @@ export function ContactPage() {
                     <h3 className="font-bold text-secondary-900">Based in Nepal</h3>
                   </div>
                   <p className="text-sm text-secondary-500 mb-4">Serving clients locally and globally.</p>
-                  <div className="w-full h-28 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-secondary-100 flex items-center justify-center relative overflow-hidden">
-                    <svg width="200" height="80" viewBox="0 0 200 80" fill="none" className="opacity-30">
-                      <path d="M 10 30 Q 30 15 50 35 T 90 20 T 130 40 T 170 25 T 190 35 L 180 60 Q 140 55 100 65 T 20 50 Z" fill="#94a3b8" />
+                  <div className="w-full h-32 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-secondary-100 flex items-center justify-center relative overflow-hidden">
+                    <svg width="220" height="90" viewBox="0 0 220 90" fill="none" className="opacity-45 select-none pointer-events-none">
+                      <defs>
+                        <linearGradient id="nepal-grad" x1="0" y1="0" x2="220" y2="90" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
+                          <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.25" />
+                        </linearGradient>
+                      </defs>
+                      {/* Stylized Nepal Map shape */}
+                      <path 
+                        d="M 12 36 L 32 30 L 52 35 L 75 38 L 105 40 L 132 45 L 155 42 L 175 41 L 195 44 L 208 47 L 210 54 L 202 65 L 188 68 L 180 62 L 165 60 L 150 64 L 132 63 L 115 62 L 95 59 L 80 58 L 60 55 L 45 54 L 25 50 L 14 46 Z" 
+                        fill="url(#nepal-grad)" 
+                        stroke="#818cf8" 
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
+                    
+                    {/* Glowing pulse at Damak, Jhapa (Far east side) */}
                     <motion.div
-                      animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute w-6 h-6 rounded-full bg-primary-500/30 flex items-center justify-center"
-                      style={{ left: '55%', top: '45%' }}
+                      animate={{ scale: [1, 2, 1], opacity: [0.8, 0.2, 0.8] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute w-5 h-5 rounded-full bg-red-500/40 flex items-center justify-center pointer-events-none"
+                      style={{ right: '14%', bottom: '38%' }}
                     >
-                      <div className="w-2.5 h-2.5 rounded-full bg-primary-600" />
+                      <div className="w-2 h-2 rounded-full bg-red-600 shadow-lg shadow-red-500/80" />
                     </motion.div>
+
+                    {/* Label Badge */}
+                    <div 
+                      className="absolute text-[9px] font-bold text-red-600 bg-white/95 px-1.5 py-0.5 rounded-md border border-red-100 shadow-sm flex items-center gap-0.5 select-none"
+                      style={{ right: '6%', bottom: '58%' }}
+                    >
+                      <span className="w-1 h-1 rounded-full bg-red-500 animate-ping" />
+                      Damak, Jhapa 🇳🇵
+                    </div>
                   </div>
                 </motion.div>
               </div>
